@@ -74,17 +74,21 @@ def select(heading, options):
     return _dialog.select(heading, options)
 
 def resolve(url):
-    if type(url) is unicode:
-        url = url.encode('utf8')
-    url = quote(url, ':/')
-
-    # import the resolvers so that resolveurls pick them up
-    import lib.resolvers
-    hmf = HostedMediaFile(url)
-    if hmf:
-        return hmf.resolve()
+    resolved_url = ""
+    if 'google' in url and 'googlevideo' not in url:
+        resolved_url = url
     else:
-        return ""
+        if type(url) is unicode:
+            url = url.encode('utf8')
+        url = quote(url, ':/')
+
+        # import the resolvers so that resolveurls pick them up
+        import lib.resolvers
+        hmf = HostedMediaFile(url)
+        if hmf:
+            resolved_url = hmf.resolve()
+
+    return resolved_url
 
 def sleep(ms):
     xbmc.sleep(ms)
